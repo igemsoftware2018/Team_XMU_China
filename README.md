@@ -10,6 +10,6 @@ The main code of communication is socket-server.js, in order to link with app an
 Hardware:
 The main code of communication is pi.js, in order to link with cloud server. You also need to run 'npm install' to download some packages.
 
-If you have any questions, pleaes send email to gmailxmu@gmail.com.
+If you have any questions, pleaes send email to igemxmu@gmail.com.
 
 
