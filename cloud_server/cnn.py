@@ -37,12 +37,17 @@ dropout_placeholder = tf.placeholder(tf.float32)
 
 conv0 = tf.layers.conv2d(datas_placeholder, 20, 5, activation = tf.nn.relu)
 pool0 = tf.layers.max_pooling2d(conv0, [2,2], [2,2])
-conv1 = tf.layers.conv2d(pool0, 40, 4, activation = tf.nn.relu)
+conv1 = tf.layers.conv2d(pool0, 40, 5, activation = tf.nn.relu)
 pool1 = tf.layers.max_pooling2d(conv1, [2,2], [2,2])
+conv2 = tf.layers.conv2d(pool1, 80, 3, activation = tf.nn.relu)
+pool2 = tf.layers.max_pooling2d(conv2, [2,2], [2,2])
+conv3 = tf.layers.conv2d(pool1, 160, 3, activation = tf.nn.relu)
+pool3 = tf.layers.max_pooling2d(conv3, [2,2], [2,2])
 
-flatten = tf.layers.flatten(pool1)
-fc = tf.layers.dense(flatten, 400, activation = tf.nn.relu)
-dropout_fc = tf.layers.dropout(fc, dropout_placeholder)
+flatten = tf.layers.flatten(pool2)
+fc0 = tf.layers.dense(flatten, 400, activation = tf.nn.relu)
+fc1 = tf.layers.dense(fc0, 200, activation = tf.nn.relu)
+dropout_fc = tf.layers.dropout(fc1, dropout_placeholder)
 logits = tf.layers.dense(dropout_fc, num_classes)
 predicted_labels = tf.arg_max(logits, 1)
 
@@ -64,9 +69,9 @@ with tf.Session() as sess:
                 labels_placeholder: labels,
                 dropout_placeholder: 0.25
                 }
-        for step in range(200):
+        for step in range(750):
             _, mean_loss_val = sess.run([optimizer, mean_loss], feed_dict = train_feed_dict)
-            if step % 10 == 0:
+            if step % 50 == 0:
                 print("step = {}\tmean loss = {}".format(step, mean_loss_val))
         saver.save(sess, model_path)
         print("Train end! Save model to {}".format(model_path))
